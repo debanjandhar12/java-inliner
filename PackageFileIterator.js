@@ -28,6 +28,12 @@ class PackageFileIterator extends BaseJavaCstVisitorWithDefaults {
       }
     }
 
+    interfaceModifier(ctx) {
+      if(ctx.Public) {
+        this.rangesToRemove.push(new Range(ctx.Public[0].startOffset, ctx.Public[0].endOffset+1));
+      }
+    }
+
     importDeclaration(ctx) {
       // Get import package name excluding the class Name
       let pkgName = this.javaText.substring(ctx.packageOrTypeName[0].location.startOffset, ctx.Semicolon[0].endOffset);
