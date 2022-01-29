@@ -1,0 +1,12 @@
+{
+  "name": "java-inliner",
+  "version": "0.0.1",
+  "title": "java-inliner",
+  "description": "An script to inline all import statements in given input java file.",
+  "repo": "java-inliner",
+  "author": "@debanjandhar12",
+  "license": "CC0-1.0",
+  "dependencies": {
+    "java-parser": "2.0.1"
+  }
+}
