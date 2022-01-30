@@ -1,34 +1,29 @@
 const fs = require("fs");
 const { parse, BaseJavaCstVisitorWithDefaults } = require("java-parser");
+const { _ } = require("lodash");
 
 /**
  * This class contains information about the packages in given list of java files location
  */
 class PackageImportTable {
     constructor(files) {
-        this.tableEntriesByPkgName = new Map();
+        this.tableEntries = [];
 
         for(let file of files) {
-            this.addEntryForFile(file);
+            this.addEntry(file);
         }
     }
 
-    addEntryForFile(file) {
+    addEntry(file) {
         let javaText = fs.readFileSync(file, 'utf8');
         let cst = parse(javaText);
         let pkgName = new PackageIterator(javaText, cst).pkgName;
-        this.tableEntriesByPkgName.set(pkgName, {javaText: javaText, cst: cst, file: file});
+        let entry = {file: file, pkgName: pkgName, javaText: javaText, cst: cst};
+        this.tableEntries.push(entry);
     }
 
-    editEntryByPkgName(pkgName, obj) {
-        let entry = this.tableEntriesByPkgName.get(pkgName);
-        if(entry) {
-            Object.assign(entry, obj); // Modifies only the properties that are provided while retaining the rest
-        }
-    }
-
-    getEntryByPkgName(pkgName) {
-        return this.tableEntriesByPkgName.get(pkgName);
+    query(q) {
+        return _.filter(this.tableEntries, q);
     }
 }
 

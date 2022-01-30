@@ -30,21 +30,24 @@ class SolutionGenerator {
         console.log(inputFileIteratorOutput);
 
         // Iterate through the toInlinePackages array and inline the packages
+        let packageInlined = new Map();
         while(toInlinePackages.length > 0) {
             let pkgName = toInlinePackages.pop();
-            let pkgImportTableEntry = pkgImportTable.getEntryByPkgName(pkgName);
-            if(!pkgImportTableEntry) throw new Error(`Package ${pkgName} not found in the package import table`);   // The package is not found in the pkgFiles
-            if(pkgImportTableEntry.inlined) continue;   // This package has already been inlined
+            let pkgImportTableEntrys = pkgImportTable.query({pkgName: pkgName});
+            if(pkgImportTableEntrys.length == 0) throw new Error(`Entries for package ${pkgName} not found in the PackageImportTable`);
+            if(packageInlined.get(pkgName)) continue;   // The package has already been inlined
 
-            let pkgCst = pkgImportTableEntry.cst;
-            let pkgJavaText = pkgImportTableEntry.javaText;
-            let packageFileIteratorOutput = new PackageFileIterator(pkgJavaText, pkgCst).getOutput();
-            toInlinePackages = toInlinePackages.concat(packageFileIteratorOutput.toInlinePackages);
-            codeToPrepend = codeToPrepend.concat(packageFileIteratorOutput.codeToPrepend);
-            codeToAppend = codeToAppend.concat(packageFileIteratorOutput.codeToAppend);
+            for(let pkgImportTableEntry of pkgImportTableEntrys) {
+                let pkgCst = pkgImportTableEntry.cst;
+                let pkgJavaText = pkgImportTableEntry.javaText;
+                let packageFileIteratorOutput = new PackageFileIterator(pkgJavaText, pkgCst).getOutput();
+                toInlinePackages = toInlinePackages.concat(packageFileIteratorOutput.toInlinePackages);
+                codeToPrepend = codeToPrepend.concat(packageFileIteratorOutput.codeToPrepend);
+                codeToAppend = codeToAppend.concat(packageFileIteratorOutput.codeToAppend);    
+                console.log(packageFileIteratorOutput);
+            }
 
-            pkgImportTable.editEntryByPkgName(pkgName, {inlined:true});
-            console.log(packageFileIteratorOutput);
+            packageInlined.set(pkgName, true);
         }
 
         // Generate and Return Output Code
