@@ -3,7 +3,7 @@ const { PackageImportTable } = require("./PackageImportTable");
 const { InputFileIterator } = require("./InputFileIterator");
 const { PackageFileIterator } = require("./PackageFileIterator");
 const { parse } = require("java-parser");
-
+const { _ } = require("lodash");
 /**
  * This class takes a main input java file and a list of java package files used by the input file
 */
@@ -52,6 +52,7 @@ class SolutionGenerator {
 
         // Generate and Return Output Code
         let outputCode = "";
+        codeToPrepend = _.uniq(codeToPrepend);
         outputCode += codeToPrepend.join("\n");
         outputCode += "\n";
         outputCode += codeToAppend.join("\n");
