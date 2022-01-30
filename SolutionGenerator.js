@@ -30,14 +30,13 @@ class SolutionGenerator {
         console.log(inputFileIteratorOutput);
 
         // Iterate through the toInlinePackages array and inline the packages
-        let packageInlined = new Map();
         while(toInlinePackages.length > 0) {
-            let pkgName = toInlinePackages.pop();
-            let pkgImportTableEntrys = pkgImportTable.query({pkgName: pkgName});
-            if(pkgImportTableEntrys.length == 0) throw new Error(`Entries for package ${pkgName} not found in the PackageImportTable`);
-            if(packageInlined.get(pkgName)) continue;   // The package has already been inlined
+            let pkgNameWithClass = toInlinePackages.pop();
+            let pkgImportTableEntrys = pkgImportTable.getPackageEntries(pkgNameWithClass);
+            if(pkgImportTableEntrys.length == 0) throw new Error(`Entries for package class ${pkgNameWithClass} not found in the PackageImportTable`);
 
             for(let pkgImportTableEntry of pkgImportTableEntrys) {
+                if(packageFileInlined.get(pkgImportTableEntry.file)) continue;   // The package file has already been inlined
                 let pkgCst = pkgImportTableEntry.cst;
                 let pkgJavaText = pkgImportTableEntry.javaText;
                 let packageFileIteratorOutput = new PackageFileIterator(pkgJavaText, pkgCst).getOutput();
@@ -45,9 +44,8 @@ class SolutionGenerator {
                 codeToPrepend = codeToPrepend.concat(packageFileIteratorOutput.codeToPrepend);
                 codeToAppend = codeToAppend.concat(packageFileIteratorOutput.codeToAppend);    
                 console.log(packageFileIteratorOutput);
+                packageFileInlined.set(pkgImportTableEntry.file, true);
             }
-
-            packageInlined.set(pkgName, true);
         }
 
         // Generate and Return Output Code

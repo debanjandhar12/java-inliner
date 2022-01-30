@@ -19,18 +19,15 @@ class InputFileIterator extends BaseJavaCstVisitorWithDefaults {
     }
 
     importDeclaration(ctx) {
-      // Get import package name excluding the class Name
-      let pkgName = this.javaText.substring(ctx.packageOrTypeName[0].location.startOffset, ctx.Semicolon[0].endOffset);
-      pkgName = pkgName.split('.');
-      pkgName.pop();
-      pkgName = pkgName.join('.');
-      
+      // Get import package name including the class Name
+      let pkgNameWithClass = this.javaText.substring(ctx.packageOrTypeName[0].location.startOffset, ctx.Semicolon[0].endOffset);
 
       // Decide what to do with the package
-      if(isJavaBuiltInPackage(pkgName)) {
-        this.codeToPrepend.push(this.javaText.substring(ctx.Import[0].startOffset, ctx.Semicolon[0].endOffset+1));
+      if(isJavaBuiltInPackage(pkgNameWithClass)) {
+        let importStatement = this.javaText.substring(ctx.Import[0].startOffset, ctx.Semicolon[0].endOffset+1);
+        this.codeToPrepend.push(importStatement);
       } else {
-        this.toInlinePackages.push(pkgName);
+        this.toInlinePackages.push(pkgNameWithClass);
       }
 
       this.rangesToRemove.push(new Range(ctx.Import[0].startOffset, ctx.Semicolon[0].endOffset+1));

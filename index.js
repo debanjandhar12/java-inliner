@@ -1,4 +1,4 @@
-const { promises: fs } = require("fs");
+const fs = require("fs");
 const { parse } = require("java-parser");
 const { PackageImportTable } = require("./PackageImportTable");
 const { SolutionGenerator } = require("./SolutionGenerator");
@@ -47,8 +47,28 @@ async function inline_file(file) {
 // let a = new PackageImportTable(["./test/test1/libs/InputReader.java"]);
 // console.log(a.query({pkgName: "libs"}));
 
-// let s = new SolutionGenerator("./test/test1/HelloWorld.java", ["./test/test1/libs/InputReader.java"]);
-// console.log(s.generateSolution());
+//let s = new SolutionGenerator("./test/test1/HelloWorld.java", ["./test/test1/libs/InputReader.java"]);
+//console.log(s.generateSolution());
 
 let s = new SolutionGenerator("./test/test2/Main.java", ["./test/test2/libs/Bank.java", "./test/test2/libs/SBI.java"]);
 console.log(s.generateSolution());
+
+// Make array of all java files inside test3/net and it's subdirectory
+let pkgFiles = [];
+let directory = ["./test/test3/net"];
+while(directory.length > 0) {
+  let dir = directory.pop();
+  let files = fs.readdirSync(dir);
+  for(let i = 0; i < files.length; i++) {
+      let file = files[i];
+      if(file.endsWith(".java")) {
+          pkgFiles.push(dir +"/" + file);
+      }
+      else if(fs.lstatSync(dir +"/" + file).isDirectory()) {
+          directory.push(dir + "/" + file);
+      }
+  }
+}
+// let s = new SolutionGenerator("./test/test3/Main2.java", pkgFiles);
+// Write solution to file
+// fs.writeFileSync("./test/test3/solution.txt", s.generateSolution());

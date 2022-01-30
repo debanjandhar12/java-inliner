@@ -25,6 +25,20 @@ class PackageImportTable {
     query(q) {
         return _.filter(this.tableEntries, q);
     }
+
+    getPackageEntries(pkgNameWithClass) { 
+        let pkgNameWithClassArr = pkgNameWithClass.split('.');
+        pkgNameWithClassArr.pop();
+        let pkgName = pkgNameWithClassArr.join('.');
+        pkgNameWithClassArr = pkgNameWithClass.split('.');
+
+        if(pkgNameWithClassArr[pkgNameWithClassArr.length-1] == "*") {
+            return _.filter(this.tableEntries, function(o) { return o.pkgName == pkgName; });
+        }
+        else {
+            return _.filter(this.tableEntries, function(o) { let className = o.file.split('/').pop().split(".")[0]; console.log(className); return o.pkgName == pkgName && className == pkgNameWithClassArr[pkgNameWithClassArr.length-1]; });
+        }
+    }
 }
 
 // This iterates a java file's text cst and get the package name of it.
