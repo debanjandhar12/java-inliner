@@ -26,12 +26,14 @@ class PackageFileIterator extends BaseJavaCstVisitorWithDefaults {
       if(ctx.Public) {
         this.rangesToRemove.push(new Range(ctx.Public[0].startOffset, ctx.Public[0].endOffset+1));
       }
+      super.classMemberDeclaration(ctx);
     }
 
     interfaceModifier(ctx) {
       if(ctx.Public) {
         this.rangesToRemove.push(new Range(ctx.Public[0].startOffset, ctx.Public[0].endOffset+1));
       }
+      super.classMemberDeclaration(ctx);
     }
 
     importDeclaration(ctx) {
@@ -47,6 +49,7 @@ class PackageFileIterator extends BaseJavaCstVisitorWithDefaults {
       }
 
       this.rangesToRemove.push(new Range(ctx.Import[0].startOffset, ctx.Semicolon[0].endOffset+1));
+      super.classMemberDeclaration(ctx);
     }
 
     generateAppendCode() {

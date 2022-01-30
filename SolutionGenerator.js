@@ -30,6 +30,7 @@ class SolutionGenerator {
         console.log(inputFileIteratorOutput);
 
         // Iterate through the toInlinePackages array and inline the packages
+        let packageFileInlined = new Map();
         while(toInlinePackages.length > 0) {
             let pkgNameWithClass = toInlinePackages.pop();
             let pkgImportTableEntrys = pkgImportTable.getPackageEntries(pkgNameWithClass);

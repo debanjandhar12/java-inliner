@@ -16,6 +16,7 @@ class InputFileIterator extends BaseJavaCstVisitorWithDefaults {
       this.validateVisitor();
 
       this.codeToAppend.push(this.generateAppendCode()); // Generate Append Code from Iteration Result
+      super.classMemberDeclaration(ctx);
     }
 
     importDeclaration(ctx) {
@@ -31,6 +32,7 @@ class InputFileIterator extends BaseJavaCstVisitorWithDefaults {
       }
 
       this.rangesToRemove.push(new Range(ctx.Import[0].startOffset, ctx.Semicolon[0].endOffset+1));
+      super.classMemberDeclaration(ctx);
     }
 
     generateAppendCode() {
