@@ -20,6 +20,7 @@ class PackageFileIterator extends BaseJavaCstVisitorWithDefaults {
 
     packageDeclaration(ctx) {
       this.rangesToRemove.push(new Range(ctx.Package[0].startOffset, ctx.Semicolon[0].endOffset+1));
+      super.classMemberDeclaration(ctx);
     }
 
     classModifier(ctx) {

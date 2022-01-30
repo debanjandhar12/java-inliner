@@ -36,6 +36,7 @@ class PackageImportTable {
             return _.filter(this.tableEntries, function(o) { return o.pkgName == pkgName; });
         }
         else {
+            return _.filter(this.tableEntries, function(o) { return o.pkgName == pkgName; });
             return _.filter(this.tableEntries, function(o) { let className = o.file.split('/').pop().split(".")[0]; console.log(className); return o.pkgName == pkgName && className == pkgNameWithClassArr[pkgNameWithClassArr.length-1]; });
         }
     }

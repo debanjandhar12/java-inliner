@@ -16,7 +16,6 @@ class InputFileIterator extends BaseJavaCstVisitorWithDefaults {
       this.validateVisitor();
 
       this.codeToAppend.push(this.generateAppendCode()); // Generate Append Code from Iteration Result
-      super.classMemberDeclaration(ctx);
     }
 
     importDeclaration(ctx) {
